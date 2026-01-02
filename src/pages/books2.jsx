@@ -3,6 +3,13 @@ import "../styles/books.css";
 import { useEffect, useState } from "react";
 // import book.css for styling
 import "../styles/books.css";
+import {
+  fetchBooksAPI,
+  fetchSingleBookAPI,
+  addBookAPI,
+  updateBookAPI,
+  deleteBookAPI,
+} from "../api/axios";
 
 function Books2() {
     
@@ -26,47 +33,75 @@ function Books2() {
          API CALLS
       ========================= */
     
-      const fetchBooks = async () => {
-        setLoading(true);
-        const res = await fetch(API_URL);
-        const data = await res.json();
-        setBooks(data);
-        setLoading(false);
-      };
+      // const fetchBooks = async () => {
+      //   setLoading(true);
+      //   const res = await fetch(API_URL);
+      //   const data = await res.json();
+      //   setBooks(data);
+      //   setLoading(false);
+      // };
     
-      const fetchSingleBook = async (id) => {
-        const res = await fetch(`${API_URL}/${id}`);
-        return res.json();
-      };
+      // const fetchSingleBook = async (id) => {
+      //   const res = await fetch(`${API_URL}/${id}`);
+      //   return res.json();
+      // };
     
-      const addBook = async () => {
-        await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        });
-        closeModal();
-        fetchBooks();
-      };
+      // const addBook = async () => {
+      //   await fetch(API_URL, {
+      //     method: "POST",
+      //     headers: { "Content-Type": "application/json" },
+      //     body: JSON.stringify(formData),
+      //   });
+      //   closeModal();
+      //   fetchBooks();
+      // };
     
-      const updateBook = async () => {
-        await fetch(`${API_URL}/${selectedBook.id}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        });
-        closeModal();
-        fetchBooks();
-      };
+      // const updateBook = async () => {
+      //   await fetch(`${API_URL}/${selectedBook.id}`, {
+      //     method: "PATCH",
+      //     headers: { "Content-Type": "application/json" },
+      //     body: JSON.stringify(formData),
+      //   });
+      //   closeModal();
+      //   fetchBooks();
+      // };
     
-      const deleteBook = async () => {
-        await fetch(`${API_URL}/${selectedBook.id}`, {
-          method: "DELETE",
-        });
-        closeModal();
-        fetchBooks();
-      };
-    
+      // const deleteBook = async () => {
+      //   await fetch(`${API_URL}/${selectedBook.id}`, {
+      //     method: "DELETE",
+      //   });
+      //   closeModal();
+      //   fetchBooks();
+      // };
+    const fetchBooks = async () => {
+  setLoading(true);
+  const { data } = await fetchBooksAPI(); // Axios returns { data }
+  setBooks(data);
+  setLoading(false);
+};
+
+const fetchSingleBook = async (id) => {
+  const { data } = await fetchSingleBookAPI(id);
+  return data;
+};
+
+const addBook = async () => {
+  await addBookAPI(formData);
+  closeModal();
+  fetchBooks();
+};
+
+const updateBook = async () => {
+  await updateBookAPI(selectedBook.id, formData);
+  closeModal();
+  fetchBooks();
+};
+
+const deleteBook = async () => {
+  await deleteBookAPI(selectedBook.id);
+  closeModal();
+  fetchBooks();
+};
       /* =========================
          MODAL HANDLERS
       ========================= */
@@ -108,7 +143,8 @@ function Books2() {
     
       const openMembers = () => {
         window.location.href = "/members";
-      }
+      };
+
       useEffect(() => {
         fetchBooks();
       }, []);

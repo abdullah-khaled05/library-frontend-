@@ -10,7 +10,7 @@ function Login() {
     e.preventDefault();
     try {
       const res = await loginUser(form);
-      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("token", res.data.access_token);
       alert("Login successful");
       window.location.href = "/books";
     } catch (err) {
